@@ -1,0 +1,14 @@
+cluster.name:
+  - benben-elasticsearch-cluster
+node.name:
+  - "benben-node1"
+# Path to directory where to store the data (separate multiple locations by comma):
+path.data:
+  - /opt/elasticearch/benben-node1/data
+# Path to log files:
+path.logs:
+  - /opt/elasticearch/benben-node1/logs
+transport.tcp.port:
+  - 9300
+http.port:
+  - 9200
