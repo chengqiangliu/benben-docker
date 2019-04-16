@@ -1,0 +1,12 @@
+filebeat:
+  prospectors:
+    - input_type: stdin
+      document_type: supervisor
+      tags: ["benben_app"]
+
+output:
+  console:
+    pretty: true
+  logstash:
+    hosts: ["benben.logstash.host:5677"]
+    index: benben-filebeat
