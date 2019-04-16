@@ -7,7 +7,7 @@ SERVICE_NAME="$1"
 echo "SERVICE_NAME: $SERVICE_NAME"
 
 case $SERVICE_NAME in
-  "filebeat" | "rabbitmq" | "logstash" | "openjdk8" | "nginx" | "nodejs" | "elasticsearch" )
+  "filebeat" | "rabbitmq" | "logstash" | "openjdk8" | "nginx" | "nodejs" | "elasticsearch" | "nexus3" | "jenkins" )
     cd ../dockerfiles/$SERVICE_NAME
 
     image_count=$(docker images --format "{{.Repository}}\t{{.ID}}" --no-trunc | grep "benben/$SERVICE_NAME" | wc -c)
