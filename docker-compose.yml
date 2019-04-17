@@ -53,9 +53,9 @@ services:
       - "5672:5672"
       - "15672:15672"
     networks:
-      - default-network:
-          aliases:
-            - host.rabbitmq
+      default-network:
+        aliases:
+          - host.rabbitmq
 
   logstash:
    image: benben/logstash
@@ -80,7 +80,7 @@ services:
       - "9300:9300"
 
   kibana:
-    image: kibana:5.5.0
+    image: kibana:7.0.0
     depends_on:
       - elasticsearch
     networks:
@@ -96,7 +96,7 @@ networks:
   default-network:
 
 volumes:
-  - mysql-data:
-  - elasticsearch-data:
-  - nexus-data:
-  - jenkins-data:
+  mysql-data:
+  elasticsearch-data:
+  nexus-data:
+  jenkins-data:
