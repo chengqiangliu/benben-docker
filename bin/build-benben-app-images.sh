@@ -4,11 +4,11 @@ DIR="$( cd "$(dirname "$0")" && pwd )"
 cd $DIR/
 
 NEXUS_DOWNLOAD_URL="http://localhost:8081/service/rest/v1/search/assets?"
-NEXUS_REPO="benben-repository"
+NEXUS_REPO="benben-maven-repository"
 GROUP="com.benben.ffms"
 
 for i in "$@"; do
-case $i in
+  case $i in
     -c=*|--component=*)
     COMPONENT="${i#*=}"
     shift
@@ -17,11 +17,7 @@ case $i in
     VERSION="${i#*=}"
     shift
     ;;
-    -env=*)
-    ENV="${i#*=}"
-    shift
-    ;;
-esac
+  esac
 done
 
 HELP_MSG=' is required.\nThe command should be like: ./build_docker_image.sh -c|--component={component name} -v|--version={version}'
@@ -31,10 +27,10 @@ if [ -z $COMPONENT ]; then
 fi
 
 case $COMPONENT in
-  "benben-ffms" | "benben-nodejs" )
+  "ffms" | "benben-nodejs" )
     ;;
   * )
-    echo -e "The component name must be one of (pms-api, pms-admin, reservation-api, pointclub-web, grant-worker, scheduler)"
+    echo -e "The component name must be one of (ffms, benben-nodejs)"
     exit 1
     ;;
 esac
@@ -45,15 +41,14 @@ if [ -z $VERSION ]; then
 fi
 
 VERSION_IMAGE_NAME="benben/${COMPONENT}:${VERSION}"
-echo "Building gpp-app docker image for $COMPONENT, version: $VERSION env: $GPP_ENV ..."
+echo "Building gpp-app docker image for $COMPONENT, version: $VERSION ..."
 docker rmi ${VERSION_IMAGE_NAME} &> /dev/null
 
-WORK_DIR="$( cd "$(dirname "$0")" && pwd )"/benben-app
-cd $WORK_DIR
+cd benben-app
 
 mkdir -p .tmp
 JAR_FILE=.tmp/${COMPONENT}-${VERSION}.jar
-JAR_URL=$(curl -sX GET "http://localhost:8081/service/rest/v1/search/assets?repository=benben-repository&group=${GROUP}&name=${COMPONENT}&maven.extension=jar&maven.baseVersion=${VERSION}" | grep "downloadUrl" | awk -F '"' '{print $4}' | sort -r | head -1)
+JAR_URL=$(curl -sX GET "http://localhost:8081/service/rest/v1/search/assets?repository=benben-maven-repository&group=${GROUP}&name=${COMPONENT}&maven.extension=jar&maven.baseVersion=${VERSION}" | grep "downloadUrl" | awk -F '"' '{print $4}' | sort -r | head -1)
 if [ -z "$JAR_URL" ] ; then
   echo "ERROR: The artifact has not been found in the repository - ${NEXUS_REPO}!"
   exit 1
