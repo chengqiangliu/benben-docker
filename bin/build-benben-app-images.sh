@@ -44,11 +44,11 @@ VERSION_IMAGE_NAME="benben/${COMPONENT}:${VERSION}"
 echo "Building gpp-app docker image for $COMPONENT, version: $VERSION ..."
 docker rmi ${VERSION_IMAGE_NAME} &> /dev/null
 
-cd benben-app
+cd ../dockerfiles/benben-app
 
 mkdir -p .tmp
 JAR_FILE=.tmp/${COMPONENT}-${VERSION}.jar
-JAR_URL=$(curl -sX GET "http://localhost:8081/service/rest/v1/search/assets?repository=benben-maven-repository&group=${GROUP}&name=${COMPONENT}&maven.extension=jar&maven.baseVersion=${VERSION}" | grep "downloadUrl" | awk -F '"' '{print $4}' | sort -r | head -1)
+JAR_URL=$(curl -sX GET "http://localhost:8081/service/rest/v1/search/assets?repository=benben-maven-repository&group=com.benben.ffms&name=ffms&maven.extension=jar&maven.baseVersion=1.0.0" | grep "downloadUrl" | awk -F '"' '{print $4}' | sort -r | head -1)
 if [ -z "$JAR_URL" ] ; then
   echo "ERROR: The artifact has not been found in the repository - ${NEXUS_REPO}!"
   exit 1
@@ -62,6 +62,7 @@ if [[ ! -f $JAR_FILE ]]; then
     exit 1
 fi
 echo JAR_FILE = $JAR_FILE
+pwd
 
 docker build -t $VERSION_IMAGE_NAME \
        --build-arg COMPONENT=$COMPONENT \

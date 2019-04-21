@@ -1,6 +1,7 @@
 FROM logstash:7.0.0
 
-COPY config/logstash.conf /opt/logstash/conf/logstash.conf
-CMD ["-f", "/opt/logstash/conf/logstash.conf"]
+RUN rm -f /usr/share/logstash/pipeline/logstash.conf
+ADD pipeline/ /usr/share/logstash/pipeline/
+ADD config/ /usr/share/logstash/config/
 
 EXPOSE 5044

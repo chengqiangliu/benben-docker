@@ -58,23 +58,25 @@ services:
           - host.rabbitmq
 
   logstash:
-   image: benben/logstash
-   depends_on:
-     - elasticsearch
-   networks:
-     default-network:
-       aliases:
-         - host.logstash
-
-  elasticsearch:
-    image: benben/elasticsearch
-    hostname: host.elasticsearch
+    image: benben/logstash
+    depends_on:
+      - elasticsearch
     networks:
       default-network:
         aliases:
-          - host.elasticsearch
+          - benben.logstash.host
+
+  elasticsearch:
+    image: benben/elasticsearch
+    hostname: benben.elasticsearch.host
+    environment:
+      cluster.initial_master_nodes: benben-node1
+    networks:
+      default-network:
+        aliases:
+         - benben.elasticsearch.host
     volumes:
-      - elasticsearch-data:/opt/elasticearch/gpp-node1/data
+      - /opt/elasticearch/benben-node1/data
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -86,9 +88,10 @@ services:
     networks:
       default-network:
         aliases:
-          - host.kibana
+          - benben.kibana.host
     environment:
-      ELASTICSEARCH_URL: http://host.elasticsearch:9200/
+      KIBANA_INDEX: ".newkibana"
+      ELASTICSEARCH_URL: "http://benben.elasticsearch.host:9200"
     ports:
       - 5601:5601
 
