@@ -91,6 +91,7 @@ services:
           - benben.kibana.host
     environment:
       KIBANA_INDEX: ".newkibana"
+      XPACK_MONITORING_ENABLED: "true"
       ELASTICSEARCH_URL: "http://benben.elasticsearch.host:9200"
     ports:
       - 5601:5601
