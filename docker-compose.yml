@@ -69,14 +69,12 @@ services:
   elasticsearch:
     image: benben/elasticsearch
     hostname: benben.elasticsearch.host
-    environment:
-      cluster.initial_master_nodes: benben-node1
     networks:
       default-network:
         aliases:
          - benben.elasticsearch.host
     volumes:
-      - /opt/elasticearch/benben-node1/data
+      - elasticsearch-data:/opt/elasticearch/benben-node1/data
     ports:
       - "9200:9200"
       - "9300:9300"
