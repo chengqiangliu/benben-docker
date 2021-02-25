@@ -1,0 +1,4 @@
+path.config: /usr/share/logstash/pipeline/logstash.conf
+path.settings: /usr/share/logstash/config/logstash.yml
+xpack.monitoring.enabled: false
+# xpack.monitoring.elasticsearch.hosts: http://benben.elasticsearch.host:9200

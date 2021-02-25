@@ -1,0 +1,5 @@
+server.port: 5601
+server.host: "0.0.0.0"
+elasticsearch.url: "http://benben.elasticsearch.host:9200"
+kibana.index: ".newkibana"
+xpack.security.enabled: false

@@ -1,0 +1,102 @@
+version: "3"
+services:
+  nexus3:
+    image: sonatype/nexus3
+    ports:
+      - "8081:8081"
+    volumes:
+      - nexus-data:/nexus-data
+    networks:
+      default-network:
+        aliases:
+          - host.nexus
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    ports:
+      - "8082:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins-data:/jenkins-data
+    networks:
+      default-network:
+        aliases:
+          - host.jenkins
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql/data
+    networks:
+      default-network:
+        aliases:
+          - host.mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      default-network:
+        aliases:
+          - host.redis
+
+  rabbitmq:
+    image: benben/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      default-network:
+        aliases:
+          - host.rabbitmq
+
+  logstash:
+    image: benben/logstash
+    depends_on:
+      - elasticsearch
+    networks:
+      default-network:
+        aliases:
+          - benben.logstash.host
+
+  elasticsearch:
+    image: benben/elasticsearch
+    hostname: benben.elasticsearch.host
+    networks:
+      default-network:
+        aliases:
+         - benben.elasticsearch.host
+    volumes:
+      - elasticsearch-data:/opt/elasticearch/benben-node1/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  kibana:
+    image: kibana:7.0.0
+    depends_on:
+      - elasticsearch
+    networks:
+      default-network:
+        aliases:
+          - benben.kibana.host
+    environment:
+      KIBANA_INDEX: ".newkibana"
+      XPACK_MONITORING_ENABLED: "true"
+      ELASTICSEARCH_URL: "http://benben.elasticsearch.host:9200"
+    ports:
+      - 5601:5601
+
+networks:
+  default-network:
+
+volumes:
+  mysql-data:
+  elasticsearch-data:
+  nexus-data:
+  jenkins-data:
